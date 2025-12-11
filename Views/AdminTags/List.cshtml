@@ -1,0 +1,48 @@
+@model List<_1_Application.Models.Domain.Tag>
+@{
+    ViewData["Title"] = "View All Tag";
+}
+
+<h1>View All  Tag - Admin Functionality</h1>
+
+    @if(Model!=null){
+         <table class="table">
+
+        <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Display Name</th>
+            <th scope="col"></th>
+        </tr>
+
+        <tbody>
+        @foreach(var tag in Model){
+            <tr>
+                <td>@tag.Id</td>
+                <td>@tag.Name</td>
+                <td>@tag.DisplayName</td>
+                <td>
+                <a asp-area=""
+                   asp-controller="AdminTags"
+                   asp-action="Edit"
+                   asp-route-id="@tag.Id"
+                >
+                Edit
+                </a>
+                </td>
+            </tr>
+
+        }     
+        </tbody>
+
+  </thead>
+
+</table>
+    }
+    else{
+        <p>No Tag Found</p>
+    }
+
+   
+
