@@ -37,7 +37,7 @@ steps:
 - task: CopyFiles@2
   displayName: 'Copy files to Artifact Staging'
   inputs:
-    SourceFolder: 'application-1'
+    SourceFolder: '$(Build.SourcesDirectory)' #c/agent/_work/3/s = Build.SourcesDirectory
     Contents: 'bin/Release/**'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
