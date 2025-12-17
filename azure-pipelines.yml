@@ -7,45 +7,121 @@ trigger:
 - main
 
 pool:
-   name: 'local agent'
-   demands:
+  name: 'local agent'
+  demands:
     - msbuild
     - visualstudio
 
-steps:
+stages:
 
-- task: UseDotNet@2
-  displayName: 'Install .NET 10 SDK'
-  inputs:
-    packageType: 'sdk'
-    version: '10.0.x'
+# ======================
+# BUILD STAGE
+# ======================
+- stage: Build
+  displayName: 'Build Stage'
+  jobs:
+  - job: BuildJob
+    displayName: 'Build Job'
+    steps:
+
+    - task: UseDotNet@2
+      displayName: 'Install .NET 10 SDK'
+      inputs:
+        packageType: 'sdk'
+        version: '10.0.x'
+
+    - task: NuGetToolInstaller@1
+      displayName: 'Use NuGet'
+
+    - task: NuGetCommand@2
+      displayName: 'NuGet restore'
+      inputs:
+        restoreSolution: '**/*.sln'
+
+    - task: VSBuild@1
+      displayName: 'Build solution'
+      inputs:
+        solution: '**/*.sln'
+        msbuildArgs: '/restore /t:Build /p:DeployOnBuild=True'
+        configuration: 'Release'
+
+    - task: CopyFiles@2
+      displayName: 'Copy files to Artifact Staging'
+      inputs:
+        SourceFolder: '$(Build.SourcesDirectory)'
+        Contents: 'bin/Release/**'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifact'
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'application-artifact'
 
 
-- task: NuGetToolInstaller@1
-  displayName: 'Use NuGet'
+# ======================
+# DEPLOY STAGE
+# ======================
+- stage: Deploy
+  displayName: 'Deploy Stage'
+  dependsOn: Build
+  jobs:
+  - job: DeployJob
+    displayName: 'Deploy Job'
+    steps:
 
-- task: NuGetCommand@2
-  displayName: 'NuGet restore'
+    - download: current
+      artifact: application-artifact
 
-- task: VSBuild@1
-  displayName: 'Build solution'
-  inputs:
-    solution: '**/*.sln'
-    msbuildArgs: '/restore /t:Build /p:DeployOnBuild=True'
-    configuration: 'Release'
 
-- task: CopyFiles@2
-  displayName: 'Copy files to Artifact Staging'
-  inputs:
-    SourceFolder: '$(Build.SourcesDirectory)' #c/agent/_work/3/s = Build.SourcesDirectory
-    Contents: 'bin/Release/**'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact'
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'application-artifact' 
+
+# trigger:
+# - main
+
+# pool:
+#    name: 'local agent'
+#    demands:
+#     - msbuild
+#     - visualstudio
+
+# steps:
+
+# - task: UseDotNet@2
+#   displayName: 'Install .NET 10 SDK'
+#   inputs:
+#     packageType: 'sdk'
+#     version: '10.0.x'
+
+
+# - task: NuGetToolInstaller@1
+#   displayName: 'Use NuGet'
+
+# - task: NuGetCommand@2
+#   displayName: 'NuGet restore'
+
+# - task: VSBuild@1
+#   displayName: 'Build solution'
+#   inputs:
+#     solution: '**/*.sln'
+#     msbuildArgs: '/restore /t:Build /p:DeployOnBuild=True'
+#     configuration: 'Release'
+
+# - task: CopyFiles@2
+#   displayName: 'Copy files to Artifact Staging'
+#   inputs:
+#     SourceFolder: '$(Build.SourcesDirectory)' #c/agent/_work/3/s = Build.SourcesDirectory
+#     Contents: 'bin/Release/**'
+#     TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+# - task: PublishBuildArtifacts@1
+#   displayName: 'Publish Artifact'
+#   inputs:
+#     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+#     ArtifactName: 'application-artifact' 
+
+
+
 
 
 
