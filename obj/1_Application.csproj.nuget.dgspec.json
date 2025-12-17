@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/vickykumar/Desktop/DoNET_MVC_Application/1_Application/1_Application.csproj": {}
+    "/Users/vickykumar/Desktop/DoNET_MVC_Application/1_Application/DoNetApplication_1/1_Application.csproj": {}
   },
   "projects": {
-    "/Users/vickykumar/Desktop/DoNET_MVC_Application/1_Application/1_Application.csproj": {
+    "/Users/vickykumar/Desktop/DoNET_MVC_Application/1_Application/DoNetApplication_1/1_Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/vickykumar/Desktop/DoNET_MVC_Application/1_Application/1_Application.csproj",
+        "projectUniqueName": "/Users/vickykumar/Desktop/DoNET_MVC_Application/1_Application/DoNetApplication_1/1_Application.csproj",
         "projectName": "1_Application",
-        "projectPath": "/Users/vickykumar/Desktop/DoNET_MVC_Application/1_Application/1_Application.csproj",
+        "projectPath": "/Users/vickykumar/Desktop/DoNET_MVC_Application/1_Application/DoNetApplication_1/1_Application.csproj",
         "packagesPath": "/Users/vickykumar/.nuget/packages/",
-        "outputPath": "/Users/vickykumar/Desktop/DoNET_MVC_Application/1_Application/obj/",
+        "outputPath": "/Users/vickykumar/Desktop/DoNET_MVC_Application/1_Application/DoNetApplication_1/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/vickykumar/.nuget/NuGet/NuGet.Config"
