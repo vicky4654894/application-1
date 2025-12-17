@@ -7,13 +7,44 @@ trigger:
 - main
 
 pool:
-  vmImage: local agent
+   name: 'local agent'
+   demands:
+    - msbuild
+    - visualstudio
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+- task: NuGetToolInstaller@1
+  displayName: 'Use NuGet'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+- task: NuGetCommand@2
+  displayName: 'NuGet restore'
+
+- task: VSBuild@1
+  displayName: 'Build solution'
+  inputs:
+    solution: '**/*.sln'
+    msbuildArgs: '/restore /t:Build /p:DeployOnBuild=True'
+    configuration: 'Release'
+
+- task: CopyFiles@2
+  displayName: 'Copy files to Artifact Staging'
+  inputs:
+    SourceFolder: 'application-1'
+    Contents: 'bin/Release/**'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'application-artifact' 
+
+
+
+# - script: echo Hello, world!
+#   displayName: 'Run a one-line script'
+
+# - script: |
+#     echo Add other tasks to build, test, and deploy your project.
+#     echo See https://aka.ms/yaml
+#   displayName: 'Run a multi-line script'
